@@ -33,6 +33,17 @@ public:
   Terminal(Terminal &&) = delete;
   Terminal &operator=(Terminal &&) = delete;
 
+  [[nodiscard]]
+  bool restore() noexcept {
+    if (!modified_) {
+      return true;
+    }
+
+    if (::tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_) == -1) {
+      return false;
+    }
+  }
+
 private:
   termios original_{};
   termios current_{};
