@@ -27,6 +27,12 @@ public:
     }
   }
 
+  Terminal(const Terminal &) = delete;
+  Terminal &operator=(const Terminal &) = delete;
+
+  Terminal(Terminal &&) = delete;
+  Terminal &operator=(Terminal &&) = delete;
+
 private:
   termios original_{};
   termios current_{};
