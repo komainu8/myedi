@@ -42,6 +42,11 @@ public:
     if (::tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_) == -1) {
       return false;
     }
+
+    current_ = original_;
+    modified_ = false;
+
+    return true;
   }
 
 private:
