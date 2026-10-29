@@ -9,7 +9,7 @@
 class Terminal {
 public:
   Terminal() {
-    if (::isatty(STDIN_FILENO, &original_) == 0) {
+    if (::isatty(STDIN_FILENO) == 0) {
       throw std::system_error(errno != 0 ? errno : ENOTTY,
                               std::generic_category(),
                               "stdin is not a terminal"
