@@ -7,6 +7,8 @@ int main() {
   try {
     Terminal terminal;
 
+    terminal.enable_raw_mode();
+
     std::cout << "MyEdi\n";
     std::cout << "---------------------------\n";
     std::cout << "Press Enter to exit.\n";

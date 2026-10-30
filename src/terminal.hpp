@@ -27,11 +27,28 @@ public:
     }
   }
 
+  /*
+   * Terminal manages the terminal settings.
+   * Copying or moving could result in multiple objects managing the same
+   * terminal settings and attempting to restore them.
+   * Therefore, copying and moving are disabled.
+   */
   Terminal(const Terminal &) = delete;
   Terminal &operator=(const Terminal &) = delete;
-
   Terminal(Terminal &&) = delete;
   Terminal &operator=(Terminal &&) = delete;
+
+  void enable_raw_mode() {
+    termios raw_mode_settings = original_;
+    raw_mode_settings.c_lflag &= ~(ICANON | ECHO);
+
+    if (::tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw_mode_settings) == -1) {
+      throw std::system_error(errno, std::generic_category(),
+                              "tcsetattr failed");
+    }
+
+    modified_ = true;
+  }
 
   [[nodiscard]]
   bool restore() noexcept {
