@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cerrno>
+#include <stdexcept>
 #include <system_error>
 
 #include <termios.h>
@@ -49,6 +50,24 @@ public:
 
     modified_ = true;
   }
+
+  char read_key() {
+    char key{};
+
+    const size_t READ_SIZE = 1;
+    const ssize_t read_result = ::read(STDIN_FILENO, &key, READ_SIZE);
+
+    if (read_result == -1) {
+      throw std::system_error(errno, std::generic_category(),
+                              "read from stdin failed");
+    }
+    if (read_result == 0) {
+      throw std::runtime_error("stdin reached EOF");
+    }
+
+    return key;
+  }
+
 
   [[nodiscard]]
   bool restore() noexcept {
