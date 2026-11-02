@@ -30,7 +30,8 @@ int main() {
         break;
       }
 
-      std::cout << "Key: " << key << '\n';
+      std::cout << key;
+      std::cout.flush();
     }
 
     if (!terminal.restore()) {
