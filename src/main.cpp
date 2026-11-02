@@ -22,6 +22,8 @@ int main() {
 
     terminal.enable_raw_mode();
 
+    draw();
+
     while (true) {
       const char key = terminal.read_key();
       if (key == 'q') {
