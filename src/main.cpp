@@ -8,6 +8,14 @@ void clear_screen() {
   std::cout.flush();
 }
 
+void draw() {
+  clear_screen();
+
+  std::cout << "MyEdi\n";
+  std::cout << "Press 'q' to quit\n";
+  std::cout.flush();
+}
+
 int main() {
   try {
     Terminal terminal;
