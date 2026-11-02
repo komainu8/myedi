@@ -9,12 +9,14 @@ int main() {
 
     terminal.enable_raw_mode();
 
-    std::cout << "MyEdi\n";
-    std::cout << "---------------------------\n";
-    std::cout << "Press Enter to exit.\n";
-    std::cout.flush();
+    while (true) {
+      const char key = terminal.read_key();
+      if (key == 'q') {
+        break;
+      }
 
-    std::cin.get();
+      std::cout << "Key: " << key << '\n';
+    }
 
     if (!terminal.restore()) {
       std::cerr << "Failed to restore terminal settings.\n";
