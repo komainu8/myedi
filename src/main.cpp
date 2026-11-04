@@ -1,5 +1,6 @@
 #include <exception>
 #include <iostream>
+#include <string>
 
 #include "terminal.hpp"
 
@@ -8,11 +9,12 @@ void clear_screen() {
   std::cout.flush();
 }
 
-void draw() {
+void draw(const std::string &text) {
   clear_screen();
 
   std::cout << "MyEdi\n";
   std::cout << "Press 'q' to quit\n";
+  std::cout << text;
   std::cout.flush();
 }
 
@@ -22,7 +24,8 @@ int main() {
 
     terminal.enable_raw_mode();
 
-    draw();
+    std::string text{};
+    draw(text);
 
     while (true) {
       const char key = terminal.read_key();
@@ -30,8 +33,8 @@ int main() {
         break;
       }
 
-      std::cout << key;
-      std::cout.flush();
+      text.push_back(key);
+      draw(text);
     }
 
     if (!terminal.restore()) {
