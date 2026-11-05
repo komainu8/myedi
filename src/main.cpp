@@ -8,6 +8,12 @@ bool is_backspace(const char key) {
   return ((key == '\x7f'/* DEL */) || (key == '\x08'/* BS */));
 }
 
+void remove_character(std::string &text) {
+  if (!text.empty()) {
+    text.pop_back();
+  }
+}
+
 void clear_screen() {
   std::cout << "\033[2J\033[H";
   std::cout.flush();
