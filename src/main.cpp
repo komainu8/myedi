@@ -43,7 +43,12 @@ int main() {
         break;
       }
 
-      text.push_back(key);
+      if (is_backspace(key)) {
+        remove_character(text);
+      } else {
+        text.push_back(key);
+      }
+
       draw(text);
     }
 
