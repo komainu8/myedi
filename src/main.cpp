@@ -54,6 +54,12 @@ void move_cursor_tail(std::size_t &cursor_position, const std::string &text) {
   cursor_position = text.size();
 }
 
+void move_cursor_left(std::size_t &cursor_position) {
+  if (cursor_position > 0) {
+    --cursor_position;
+  }
+}
+
 int main() {
   try {
     Terminal terminal;
