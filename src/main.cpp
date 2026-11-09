@@ -73,21 +73,32 @@ int main() {
     terminal.enable_raw_mode();
 
     std::string text{};
-    draw(text);
+    std::size_t cursor_position{0};
+
+    draw(text, cursor_position);
 
     while (true) {
       const char key = terminal.read_key();
-      if (key == 'q') {
+
+      if (key == '\x07') {
         break;
       }
 
-      if (is_backspace(key)) {
-        remove_character(text);
-      } else {
-        text.push_back(key);
+      if (key == '\x01') {
+        move_cursor_head(cursor_position);
+      } else if (key == '\x05') {
+        move_cursor_tail(cursor_position, text);
+      } else if (key == '\x02') {
+        move_cursor_left(cursor_position);
+      } else if (key == '\x06') {
+        move_cursor_right(cursor_position, text);
+      } else if (is_backspace(key)) {
+        delete_character(text, cursor_position);
+      } else if (key >= ' ' && key <= '~') {
+        insert_character(text, cursor_position, key);
       }
 
-      draw(text);
+      draw(text, cursor_position);
     }
 
     if (!terminal.restore()) {
