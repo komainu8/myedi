@@ -60,6 +60,12 @@ void move_cursor_left(std::size_t &cursor_position) {
   }
 }
 
+void move_cursor_right(std::size_t &cursor_position, const std::string &text) {
+  if (cursor_position < text.max_size()) {
+    cursor_position++;
+  }
+}
+
 int main() {
   try {
     Terminal terminal;
