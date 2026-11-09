@@ -50,6 +50,10 @@ void move_cursor_head(std::size_t &cursor_position) {
   cursor_position = 0;
 }
 
+void move_cursor_tail(std::size_t &cursor_position, const std::string &text) {
+  cursor_position = text.size();
+}
+
 int main() {
   try {
     Terminal terminal;
