@@ -46,6 +46,10 @@ void draw(const std::string &text, std::size_t cursor_position) {
   std::cout.flush();
 }
 
+void move_cursor_head(std::size_t &cursor_position) {
+  cursor_position = 0;
+}
+
 int main() {
   try {
     Terminal terminal;
