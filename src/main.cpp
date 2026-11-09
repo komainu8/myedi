@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <exception>
 #include <iostream>
 #include <string>
@@ -11,6 +12,14 @@ bool is_backspace(const char key) {
 void remove_character(std::string &text) {
   if (!text.empty()) {
     text.pop_back();
+  }
+}
+
+void delete_character(std::string &text, std::size_t &cursor_position) {
+  if (cursor_position > 0) {
+    size_t n_character = 1;
+    text.erase(cursor_position - 1, n_character);
+    --cursor_position;
   }
 }
 
