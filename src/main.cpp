@@ -28,7 +28,13 @@ void clear_screen() {
   std::cout.flush();
 }
 
-void draw(const std::string &text) {
+void insert_character(std::string &text, std::size_t &cursor_position,
+                      char insert_char) {
+  size_t n_character = 1;
+  text.insert(cursor_position, n_character, insert_char);
+  ++cursor_position;
+}
+
   clear_screen();
 
   std::cout << "MyEdi\n";
