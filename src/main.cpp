@@ -35,11 +35,14 @@ void insert_character(std::string &text, std::size_t &cursor_position,
   ++cursor_position;
 }
 
+void draw(const std::string &text, std::size_t cursor_position) {
   clear_screen();
 
   std::cout << "MyEdi\n";
-  std::cout << "Press 'q' to quit\n";
+  std::cout << "Press 'Ctrl-G' to quit\n";
   std::cout << text;
+
+  std::cout << "\033[3;" << cursor_position + 1 << "H";
   std::cout.flush();
 }
 
