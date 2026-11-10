@@ -2,6 +2,8 @@
 
 #include <cerrno>
 #include <stdexcept>
+#include <sys/poll.h>
+#include <sys/types.h>
 #include <system_error>
 
 #include <termios.h>
@@ -66,21 +68,41 @@ public:
     modified_ = true;
   }
 
-  char read_key() {
-    char key{};
+  KeyEvent read_key() {
+    const char first = read_byte();
 
-    const size_t READ_SIZE = 1;
-    const ssize_t read_result = ::read(STDIN_FILENO, &key, READ_SIZE);
-
-    if (read_result == -1) {
-      throw std::system_error(errno, std::generic_category(),
-                              "read from stdin failed");
-    }
-    if (read_result == 0) {
-      throw std::runtime_error("stdin reached EOF");
+    if (first != '\x1b') {
+      return {KeyType::Character, first};
     }
 
-    return key;
+    if (!wait_for_input(50)) {
+      return {KeyType::Escape};
+    }
+
+    const char second = read_byte();
+
+    if (second != '[') {
+      return {KeyType::UnKnown};
+    }
+
+    if (!wait_for_input(50)) {
+      return {KeyType::UnKnown};
+    }
+
+    const char third = read_byte();
+
+    switch (third) {
+    case 'A':
+      return {KeyType::ArrowUp};
+    case 'B':
+      return {KeyType::ArrowDown};
+    case 'C':
+      return {KeyType::ArrowRight};
+    case 'D':
+      return {KeyType::ArrowLeft};
+    default:
+      return {KeyType::UnKnown};
+    }
   }
 
 
@@ -105,4 +127,43 @@ private:
   termios current_{};
 
   bool modified_ = false;
+
+  char read_byte() {
+    char byte{};
+    ssize_t result{};
+
+    do {
+      result = ::read(STDIN_FILENO, &byte, 1);
+    } while (result == -1 && errno == EINTR);
+
+    if (result == -1) {
+      const int error = errno;
+      throw std::system_error(error, std::generic_category(), "read failed");
+    }
+
+    if (result == 0) {
+      throw std::runtime_error("stdin reached EOF");
+    }
+
+    return byte;
+  }
+
+  bool wait_for_input(int timeout_millisec) {
+    pollfd desc{};
+    desc.fd = STDIN_FILENO;
+    desc.events = POLLIN;
+
+    int result{};
+
+    do {
+      result = ::poll(&desc, 1, timeout_millisec);
+    } while (result == -1 && errno == EINTR);
+
+    if (result == -1) {
+      const int error = errno;
+      throw std::system_error(error, std::generic_category(), "poll failed");
+    }
+
+    return result > 0 && (desc.revents & POLLIN) != 0;
+  }
 };

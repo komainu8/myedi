@@ -78,24 +78,34 @@ int main() {
     draw(text, cursor_position);
 
     while (true) {
-      const char key = terminal.read_key();
+      const KeyEvent key = terminal.read_key();
 
-      if (key == '\x07') {
-        break;
-      }
+      if (key.type == KeyType::Character) {
+        const char character = key.character;
 
-      if (key == '\x01') {
-        move_cursor_head(cursor_position);
-      } else if (key == '\x05') {
-        move_cursor_tail(cursor_position, text);
-      } else if (key == '\x02') {
+        if (character == '\x07') {
+          break;
+        } else if (character == '\x01') {
+          move_cursor_head(cursor_position);
+        } else if (character == '\x05') {
+          move_cursor_tail(cursor_position, text);
+        } else if (character == '\x02') {
+          move_cursor_left(cursor_position);
+        } else if (character == '\x06') {
+          move_cursor_right(cursor_position, text);
+        } else if (is_backspace(character)) {
+          delete_character(text, cursor_position);
+        } else if (character >= ' ' && character <= '~') {
+          insert_character(text, cursor_position, character);
+        }
+      } else if (key.type == KeyType::ArrowLeft) {
         move_cursor_left(cursor_position);
-      } else if (key == '\x06') {
+      } else if (key.type == KeyType::ArrowRight) {
         move_cursor_right(cursor_position, text);
-      } else if (is_backspace(key)) {
-        delete_character(text, cursor_position);
-      } else if (key >= ' ' && key <= '~') {
-        insert_character(text, cursor_position, key);
+      } else if (key.type == KeyType::ArrowUp) {
+        ;
+      } else if (key.type == KeyType::ArrowDown) {
+        ;
       }
 
       draw(text, cursor_position);
