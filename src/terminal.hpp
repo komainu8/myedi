@@ -7,6 +7,15 @@
 #include <termios.h>
 #include <unistd.h>
 
+enum class KeyType {
+  Character,
+  ArrowUp,
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  Escape,
+  UnKnown
+};
 class Terminal {
 public:
   Terminal() {
