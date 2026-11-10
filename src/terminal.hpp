@@ -16,6 +16,12 @@ enum class KeyType {
   Escape,
   UnKnown
 };
+
+struct KeyEvent {
+  KeyType type{KeyType::UnKnown};
+  char character{};
+};
+
 class Terminal {
 public:
   Terminal() {
